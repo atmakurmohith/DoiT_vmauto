@@ -18,7 +18,4 @@ output "nic_id" {
 
 }
 
-output "pip" {
-  value = azurerm_public_ip.pip.id
 
-}
