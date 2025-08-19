@@ -1,11 +1,3 @@
-provider "azurerm" {
-  features {}
-}
-
-resource "azurerm_resource_group" "rg" {
-  name = "demotest.rg"
-  location = "EastUS"
-}
 
 resource "azurerm_storage_account" "stgacc" {
  name = "ttstgacc"
