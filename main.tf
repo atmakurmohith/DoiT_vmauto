@@ -16,7 +16,7 @@ resource "azurerm_network_security_group" "NSG" {
     access = "Allow"
     protocol = "Tcp"
     source_port_range = "*"
-    destination_port_range = "22"
+    destination_port_range = "3389"
     source_address_prefix = "*"
     destination_address_prefix = "*"
   }
@@ -83,7 +83,7 @@ resource "azurerm_virtual_machine" "VM" {
   }
 }
 
-resource "azurerm_storage_account" "storage-account" {
+resource "azurerm_storage_account" "stgacc" {
   name                     = "tt-storage-account"
   resource_group_name      = azurerm_resource_group.rg.name
   location                 = azurerm_resource_group.rg.location
@@ -95,8 +95,8 @@ resource "azurerm_storage_account" "storage-account" {
   }
 }
 
-resource "azurerm_storage_container" "container" {
-  name                  = "tt-container"
+resource "azurerm_storage_container" "blob" {
+  name                  = "tt-blobcontainer"
   storage_account_id    = azurerm_storage_account.rg.id
   container_access_type = "private"
 }
