@@ -83,20 +83,4 @@ resource "azurerm_virtual_machine" "VM" {
   }
 }
 
-resource "azurerm_storage_account" "stgacc" {
-  name                     = "ttstgacc"
-  resource_group_name      = azurerm_resource_group.rg.name
-  location                 = azurerm_resource_group.rg.location
-  account_tier             = "Standard"
-  account_replication_type = "LRS"
 
-  tags = {
-    environment = "staging"
-  }
-}
-
-resource "azurerm_storage_container" "blob" {
-  name                  = "tt-blobcontainer"
-  storage_account_id    = azurerm_storage_account.stgacc.id
-  container_access_type = "private"
-}
