@@ -1,3 +1,34 @@
+name: Terraform Azure Deployment
+
+on:
+  push:
+    branches: 
+      - features/*
+
+jobs:
+  terraform:
+    name: 'Terraform Apply on Azure'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.6.0
+
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: >
+            {
+              "clientId": "6ddf3b9a-b56b-454f-953e-e013ef1b94a8",
+              "clientSecret": "ZdU8Q~8ij3xJeyha2-XPK~EMRX8G_wjMDiBlqc3C",
+              "subscriptionId": "bd6daa21-f568-4282-8037-8f42f31f0cfa",
+              "tenantId": "f729dc92-7f20-4c3a-a702-208d6bb1299c"
+            }
 
       - name: Terraform Init
         run: terraform init
