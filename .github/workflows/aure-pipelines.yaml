@@ -22,14 +22,16 @@ jobs:
       - name: Azure Login
         uses: azure/login@v1
         with:
-          creds: >
-            {
-              "clientId": "6ddf3b9a-b56b-454f-953e-e013ef1b94a8",
-              "clientSecret": "ZdU8Q~8ij3xJeyha2-XPK~EMRX8G_wjMDiBlqc3C",
-              "subscriptionId": "bd6daa21-f568-4282-8037-8f42f31f0cfa",
-              "tenantId": "f729dc92-7f20-4c3a-a702-208d6bb1299c"
-            }
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
 
+      - name: Set ARM environment variables
+        run: |
+          echo "ARM_CLIENT_ID=$(echo '${{ secrets.AZURE_CREDENTIALS }}' | jq -r .clientId)" >> $GITHUB_ENV
+          echo "ARM_CLIENT_SECRET=$(echo '${{ secrets.AZURE_CREDENTIALS }}' | jq -r .clientSecret)" >> $GITHUB_ENV
+          echo "ARM_SUBSCRIPTION_ID=$(echo '${{ secrets.AZURE_CREDENTIALS }}' | jq -r .subscriptionId)" >> $GITHUB_ENV
+          echo "ARM_TENANT_ID=$(echo '${{ secrets.AZURE_CREDENTIALS }}' | jq -r .tenantId)" >> $GITHUB_ENV
+        
+        
       - name: Terraform Init
         run: terraform init
 
