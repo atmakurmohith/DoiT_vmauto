@@ -141,7 +141,7 @@ resource_group_name = azurerm_resource_group.rg.name
 
 ip_configuration {
 name = "bastion-ip-config"
-subnet_id = azurerm_subnet.bastion.id
+subnet_id = azurerm_subnet.bastion_subnet.id
 public_ip_address_id = azurerm_public_ip.bastion_ip.id
 }
 
