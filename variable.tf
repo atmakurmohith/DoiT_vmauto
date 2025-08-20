@@ -1,7 +1,7 @@
 variable "resource_group_name" {
   description = "Name of the Resource group"
   type        = string
-  default     = "terraformstate.rg"
+  default     = "terraform-demo-rg"
 }
 
 variable "resource_group_location" {
@@ -13,42 +13,36 @@ variable "resource_group_location" {
 variable "NSG_name" {
   description = "name of the NSG"
   type        = string
-  default     = "demotest_NSG"
+  default     = "terraform-demo-NSG"
 }
 
 variable "vnet_name" {
   description = "name of the vnet"
   type        = string
-  default     = "demotest_vnet"
+  default     = "terraform-demo-vnet"
 }
 
 
 variable "subnet_name" {
   description = "name of the subnet"
   type        = string
-  default     = "demotest_subnet"
+  default     = "terraform-demo-subnet"
 }
 
 variable "nic_name" {
   description = "name of the NIC"
   type        = string
-  default     = "demotest_NIC"
-}
-
-variable "pip_name" {
-  description = "name of the pip"
-  type        = string
-  default     = "demotest_pip"
+  default     = "terraform-demo-NIC"
 }
 
 variable "VM_name" {
   description = "Name of the virtual machine"
   type        = string
-  default     = "demotest_VM"
+  default     = "terraform-demo-linuxVM"
 }
 
-variable "dev-stg" {
-  description = "name of the storage account"
+variable "windowsvm" {
+  description = "name of the windows vm"
   type = string
-  default = "devmohithstg123"
+  default = "terraform-demo-windowsvm"
 }
