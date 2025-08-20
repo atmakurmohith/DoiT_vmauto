@@ -1,7 +1,7 @@
 variable "resource_group_name" {
   description = "Name of the Resource group"
   type        = string
-  default     = "demotest.rg"
+  default     = "terraformstate.rg"
 }
 
 variable "resource_group_location" {
