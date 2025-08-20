@@ -83,4 +83,18 @@ resource "azurerm_virtual_machine" "VM" {
   }
 }
 
+resource "azurerm_storage_account" "devstg" {
+  name = var.dev-stg
+  location = azurerm_resource_group.rg.location
+  resource_group_name = azurerm_resource_group.rg.name
+  account_tier = "Standard"
+  account_replication_type ="LRS"
+  
+}
 
+resource "azurerm_storage_container" "container" {
+  name = "devcontainer"
+  storage_account_id = azurerm_storage_account.devstg.id
+  container_access_type = "private"
+
+}

@@ -46,3 +46,9 @@ variable "VM_name" {
   type        = string
   default     = "demotest_VM"
 }
+
+variable "dev-stg" {
+  description = "name of the storage account"
+  type = string
+  default = "devmohithstg123"
+}
