@@ -35,6 +35,12 @@ variable "nic_name" {
   default     = "terraform-demo-NIC"
 }
 
+variable "nic1_name" {
+  description = "name of the second NIC"
+  type = string
+  default = "terraform-demo1-NIC"
+}
+
 variable "VM_name" {
   description = "Name of the virtual machine"
   type        = string
