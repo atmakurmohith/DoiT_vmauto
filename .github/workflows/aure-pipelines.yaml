@@ -17,20 +17,7 @@ on:
           - uat
           - prod
 
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
 
-      - name: Set up Terraform
-        uses: hashicorp/setup-terraform@v3
-        with:
-          terraform_version: 1.8.5
-
-      - name: Init Terraform Backend
-        run: terraform init -backend-config="backend-${{ github.event.inputs.environment }}.conf"
 jobs:
   terraform:
     name: 'Terraform Apply on Azure'
