@@ -1,6 +1,6 @@
 resource "azurerm_resource_group" "rg" {
   name     = var.resource_group_name
-  location = var.resource_group_location
+  location = var.location
 
 }
 
@@ -147,3 +147,137 @@ public_ip_address_id = azurerm_public_ip.bastion_ip.id
 
 sku = "Standard"
 }
+
+resource "azurerm_resource_group" "testrg" {
+  name = "${var.projectname}-${var.environment}-${var.location}-rg"
+  location = var.location
+}
+
+
+
+resource "azurerm_virtual_network" "testvnet" {
+  name                = "${var.projectname}-${var.environment}-${var.location}-vnet_name"
+  address_space       = ["19.15.0.0/16"]
+  location            = azurerm_resource_group.testrg.location
+  resource_group_name = azurerm_resource_group.testrg.name
+}
+
+resource "azurerm_subnet" "testsubnet" {
+  name                 = "${var.projectname}-${var.environment}-${var.location}-subnet_name"
+  resource_group_name  = azurerm_resource_group.testrg.name
+  virtual_network_name = azurerm_virtual_network.testvnet.name
+  address_prefixes     = ["19.15.0.0/24"]
+}
+
+resource "azurerm_subnet" "testbastion_subnet" {
+  name                 = "${var.projectname}-${var.environment}-${var.location}-bastion_subnet"
+  resource_group_name  = azurerm_resource_group.testrg.name
+  virtual_network_name = azurerm_virtual_network.testvnet.name
+  address_prefixes     = ["19.15.1.0/24"]
+}
+
+resource "azurerm_network_interface" "testnic" {
+  name                = "${var.projectname}-${var.environment}-${var.location}-nic_name"
+  location            = azurerm_resource_group.testrg.location
+  resource_group_name = azurerm_resource_group.testrg.name
+
+  ip_configuration {
+    name                          = "i"
+    subnet_id                     = azurerm_subnet.testsubnet.id
+    private_ip_address_allocation = "Dynamic"
+  }
+
+}
+
+resource "azurerm_network_interface" "testnic1" {
+  name                = "${var.projectname}-${var.environment}-${var.location}-nic1_name"
+  location            = azurerm_resource_group.testrg.location
+  resource_group_name = azurerm_resource_group.testrg.name
+
+  ip_configuration {
+    name                          = "i"
+    subnet_id                     = azurerm_subnet.testsubnet.id
+    private_ip_address_allocation = "Dynamic"
+  }
+
+}
+
+
+
+resource "azurerm_virtual_machine" "testVM" {
+  name                  = "${var.projectname}-${var.environment}-${var.location}-VM_name"
+  location              = azurerm_resource_group.testrg.location
+  resource_group_name   = azurerm_resource_group.testrg.name
+  network_interface_ids = [azurerm_network_interface.testnic1.id]
+  vm_size               = "Standard_B1s"
+  storage_image_reference {
+    publisher = "Canonical"
+    offer     = "UbuntuServer"
+    sku       = "18.04-LTS"
+    version   = "latest"
+  }
+  storage_os_disk {
+    name              = "doit-lamp-vm_disk1_4d022ee7c7634773b64e988a898e7e5e"
+    caching           = "ReadWrite"
+    create_option     = "FromImage"
+    managed_disk_type = "Standard_LRS"
+  }
+  os_profile {
+    computer_name  = "TestVM1"
+    admin_username = "testingadmin"
+    admin_password = "Password1234!"
+  }
+  os_profile_linux_config {
+    disable_password_authentication = false
+  }
+  tags = {
+    environment = "staging"
+  }
+}
+
+resource "azurerm_windows_virtual_machine" "testwindowsvm" {
+  name                = "${var.projectname}-${var.environment}-${var.location}-windowsvm"
+  resource_group_name = azurerm_resource_group.testrg.name
+  location            = azurerm_resource_group.testrg.location
+  size                = "Standard_F2"
+  admin_username      = "testadminuser"
+  admin_password      = "Password1234!"
+  network_interface_ids = [
+    azurerm_network_interface.testnic.id,
+  ]
+
+  os_disk {
+    caching              = "ReadWrite"
+    storage_account_type = "Standard_LRS"
+  }
+
+  source_image_reference {
+    publisher = "MicrosoftWindowsServer"
+    offer     = "WindowsServer"
+    sku       = "2016-Datacenter"
+    version   = "latest"
+  }
+}
+
+resource "azurerm_public_ip" "testbastion_ip" {
+name = "${var.projectname}-${var.environment}-${var.location}-bastion_ip"
+location = azurerm_resource_group.testrg.location
+resource_group_name = azurerm_resource_group.testrg.name
+allocation_method = "Static"
+sku = "Standard"
+}
+
+resource "azurerm_bastion_host" "testbastion_host" {
+name = "${var.projectname}-${var.environment}-${var.location}-bastion-host"
+location = azurerm_resource_group.testrg.location
+resource_group_name = azurerm_resource_group.testrg.name
+
+ip_configuration {
+name = "bastion-ip-config"
+subnet_id = azurerm_subnet.testbastion_subnet.id
+public_ip_address_id = azurerm_public_ip.testbastion_ip.id
+}
+
+sku = "Standard"
+}
+  

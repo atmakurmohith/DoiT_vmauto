@@ -4,10 +4,11 @@ variable "resource_group_name" {
   default     = "terraform-demo-rg"
 }
 
-variable "resource_group_location" {
+
+variable "location" {
   description = "name of the location"
   type        = string
-  default     = "East US"
+  default     = "EastUS"
 }
 
 variable "NSG_name" {
@@ -27,6 +28,12 @@ variable "subnet_name" {
   description = "name of the subnet"
   type        = string
   default     = "terraform-demo-subnet"
+}
+
+variable "bastion_subnet" {
+  description = "name of the bastion subnet"
+  type = string
+  default ="terraform-bastion-subnet"
 }
 
 variable "nic_name" {
@@ -51,4 +58,15 @@ variable "windowsvm" {
   description = "name of the windows vm"
   type = string
   default = "terraform-demo-windowsvm"
+}
+
+
+
+variable "environment" {
+  type = string
+}
+
+variable "projectname" {
+  type = string
+  default = "SBU"
 }
