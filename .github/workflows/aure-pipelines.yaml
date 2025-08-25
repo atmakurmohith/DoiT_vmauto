@@ -45,19 +45,25 @@ jobs:
           echo "ARM_TENANT_ID=$(echo '${{ secrets.AZURE_CREDENTIALS }}' | jq -r .tenantId)" >> $GITHUB_ENV
         
         
-      - name: Terraform Init with Dynamic Backend
-        run: |
-          terraform init \
-            -backend-config="key=${{ github.event.inputs.environment }}.tfstate" \
-            -backend-config="resource_group_name=rg-tfstate" \
-            -backend-config="storage_account_name=tfstatestorageacct" \
-            -backend-config="container_name=tfstate"
+      # - name: Terraform Init with Dynamic Backend
+      #   run: |
+      #     terraform init \
+      #       -backend-config="key=${{ github.event.inputs.environment }}.tfstate" \
+      #       -backend-config="resource_group_name=rg-tfstate" \
+      #       -backend-config="storage_account_name=tfstatestorageacct" \
+      #       -backend-config="container_name=tfstate"
+
+      - name: Init Terraform Backend
+        run: terraform init -backend-config="backend-${{ github.event.inputs.environment }}.conf"
 
       - name: Terraform Validate
         run: terraform validate
 
       - name: Terraform Plan
-        run: terraform plan -out=tfplan
+        run: terraform plan -var="environment=${{ github.event.inputs.environment }}"
 
       - name: Terraform Apply
-        run: terraform apply -auto-approve tfplan
+        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/release'
+        run: terraform apply -auto-approve -var="environment=${{ github.event.inputs.environment }}"
+
+
